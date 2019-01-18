@@ -13,6 +13,8 @@ BASE_URL = 'http://weibo.com/aj/v6/comment/big?ajwvr=6&id={}&page={}'
 
 @app.task(ignore_result=True)
 def crawl_comment_by_page(mid, page_num):
+    print("!@#@#%#@$^%#$&^%$&^%&^%$"*10)
+    print("crawl_comment_by_page")
     try:
         cur_url = BASE_URL.format(mid, page_num)
         html = get_page(cur_url, auth_level=1, is_ajax=True)
@@ -34,6 +36,8 @@ def crawl_comment_by_page(mid, page_num):
 
 @app.task(ignore_result=True)
 def crawl_comment_page(mid):
+    print("!@#@#%#@$^%#$&^%$&^%&^%$"*10)
+    print("crawl_comment_page")
     limit = conf.get_max_comment_page() + 1
     # 这里为了马上拿到返回结果，采用本地调用的方式
     first_page = crawl_comment_by_page(mid, 1)[0]

@@ -1,4 +1,7 @@
 import sys
+import pymysql
+pymysql.install_as_MySQLdb()
+
 
 # to work well inside config module or outsize config module
 sys.path.append('..')

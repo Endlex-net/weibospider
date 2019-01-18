@@ -59,14 +59,14 @@ db:
     host: 127.0.0.1
     port: 3306
     user: root
-    password: 123456
+    password: toorsmysql
     db_name: weibo
     db_type: mysql
 
 redis:
     host: 127.0.0.1
     port: 6379
-    password: ''
+    password: 'toorsredis'
     cookies: 1                   # store and fetch cookies
     # store fetched urls and results,so you can decide whether retry to crawl the urls or not
     urls: 2

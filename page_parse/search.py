@@ -1,6 +1,7 @@
 import re
+import traceback
 import urllib.parse
-from datetime import datetime
+import datetime
 
 from bs4 import BeautifulSoup
 
@@ -49,22 +50,34 @@ def get_feed_info(feed_infos, goal):
 
 @parse_decorator(None)
 def get_weibo_info(each, html):
+    print ("----------------------")
     wb_data = WeiboData()
+    # print ("-------" * 10)
+    # print(each)
+    # print ("#$#" * 10)
+    # print(html)
+    # print ("-----" * 10)
 
-    user_cont = each.find(attrs={'class': 'face'})
-    usercard = user_cont.find('img').get('usercard', '')
+    user_cont = each.find(attrs={'class': 'card-feed'})
+    user_avator = user_cont.find(attrs={'class': 'avator'})
+    #usercard = user_cont.find('img').get('usercard', '')
+    usercard = user_avator.find('a').get('href', '')
     # this only for login user
     if not usercard:
         return None
-    wb_data.uid = usercard.split('&')[0][3:]
+    wb_data.uid = usercard.split('?')[0][12:]
+    print ("uid", wb_data.uid)
 
     try:
-        wb_data.weibo_id = each.find(attrs={'class': 'WB_screen'}).find('a').get('action-data')[4:]
+        wb_data.weibo_id = each.find(attrs={'title': '赞'}).get('action-data')[4:]
+        print ("weibo_id", wb_data.weibo_id)
     except (AttributeError, IndexError, TypeError):
         return None
 
     try:
-        wb_data.weibo_url = each.find(attrs={'node-type': 'feed_list_item_date'})['href']
+        wb_data.weibo_url = each.find(attrs={"class": "content"}).find(attrs={"class": "from"}).find('a').get("href", "")[2:]
+        # wb_data.weibo_url = each.find(attrs={'node-type': 'feed_list_item_date'})['href']
+        print ("weibo_url", wb_data.weibo_url)
     except Exception as e:
         parser.error('Failed to get weibo url, the error is {}, the source page is {}'.format(e, html))
         return None
@@ -92,21 +105,21 @@ def get_weibo_info(each, html):
     except Exception:
         wb_data.weibo_video = ''
     try:
-        wb_data.device = each.find(attrs={'class': 'feed_from'}).find(attrs={'rel': 'nofollow'}).text
+        wb_data.device = each.find(attrs={'class': 'feed_from'}).find(attrs={'rel': 'nofollow'}).text.strip()
     except AttributeError:
         wb_data.device = ''
 
     try:
-        create_time = each.find(attrs={'node-type': 'feed_list_item_date'})['date']
-    except (AttributeError, KeyError):
-        wb_data.create_time = ''
-    else:
-        create_time = int(create_time) / 1000  # 时间戳单位不同
-        create_time = datetime.fromtimestamp(create_time)
+        create_time = each.find(attrs={"class": "content"}).find(attrs={"class": "from"}).find('a').text.strip()
+        create_time = datetime.datetime.strptime(create_time, "%Y年%m月%d日 %H:%M")
         wb_data.create_time = create_time.strftime("%Y-%m-%d %H:%M")
+        print ("create_time", wb_data.create_time)
+    except Exception as e:
+        traceback.print_exc()
+        wb_data.create_time = ''
 
     try:
-        feed_action = each.find(attrs={'class': 'feed_action'})
+        feed_action = each.find(attrs={'class': 'card-act'})
     except Exception as why:
         parser.error('Failed to get feed_action, the error is {},the page source is {}'.format(why, each))
     else:
@@ -125,7 +138,8 @@ def get_weibo_info(each, html):
             wb_data.praise_num = 0
 
     try:
-        wb_data.weibo_cont = each.find(attrs={'class': 'comment_txt'}).text.strip()
+        wb_data.weibo_cont = each.find(attrs={'class': 'txt'}).text.strip()
+        print ("weibo_cont", wb_data.weibo_cont)
     except Exception as why:
         parser.error('Failed to get weibo cont, the error is {}, the page source is {}'.format(why, html))
         return None
@@ -144,7 +158,7 @@ def get_search_info(html):
     :return: search results
     """
     # 搜索结果可能有两种方式，一种是直接返回的，一种是编码过后的
-    content = _search_page_parse(html) if '举报' not in html else html
+    content = _search_page_parse(html) if '投诉' not in html else html
     if content == '':
         return list()
     # todo 这里用bs会导致某些信息不能被解析（参考../tests/fail.html），可参考使用xpath，考虑到成本，暂时不实现

@@ -1,5 +1,6 @@
 import time
 import collections
+import traceback
 from functools import wraps, partial
 from traceback import format_tb
 
@@ -46,6 +47,7 @@ def parse_decorator(return_value):
             try:
                 return func(*keys)
             except Exception as e:
+                traceback.print_exc()
                 parser.error('Failed to parse the page, {} is raised, here are details:{}'.format(
                     e, format_tb(e.__traceback__)[0]
                 ))
