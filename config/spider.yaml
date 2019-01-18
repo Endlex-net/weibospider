@@ -64,7 +64,7 @@ db:
     db_type: mysql
 
 redis:
-    host: "reids.db"
+    host: "redis.db"
     port: 6379
     password: 'toorsredis'
     cookies: 1                   # store and fetch cookies
