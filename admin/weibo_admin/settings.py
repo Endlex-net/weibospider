@@ -62,7 +62,7 @@ DATABASES = {
         'NAME': 'weibo',
         'USER': 'root',
         'PASSWORD': 'toorsmysql',
-        'HOST': '127.0.0.1',
+        'HOST': 'mysql.db',
         'PORT': '3306',
     }
 }
