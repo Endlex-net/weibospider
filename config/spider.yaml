@@ -66,7 +66,7 @@ db:
 redis:
     host: "redis.db"
     port: 6379
-    password: 'toorsredis'
+    password: 'tyut5675%^&%'
     cookies: 1                   # store and fetch cookies
     # store fetched urls and results,so you can decide whether retry to crawl the urls or not
     urls: 2

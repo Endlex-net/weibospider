@@ -61,7 +61,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'weibo',
         'USER': 'root',
-        'PASSWORD': 'toorsmysql',
+        'PASSWORD': 'tyut5675%^&%',
         'HOST': 'mysql.db',
         'PORT': '3306',
     }
