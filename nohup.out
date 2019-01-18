@@ -1,0 +1,71 @@
+/root/.virtualenvs/weibo/lib/python3.6/site-packages/celery/platforms.py:796: RuntimeWarning: You're running the worker with superuser privileges: this is
+absolutely not recommended!
+
+Please specify a different user using the --uid option.
+
+User information: uid=0 euid=0 gid=0 egid=0
+
+  uid=uid, euid=euid, gid=gid, egid=egid,
+[2019-01-19 06:10:47,698: INFO/MainProcess] Connected to redis://:**@redis.db:6379/5
+[2019-01-19 06:10:47,708: INFO/MainProcess] mingle: searching for neighbors
+[2019-01-19 06:10:48,730: INFO/MainProcess] mingle: all alone
+[2019-01-19 06:10:48,758: INFO/MainProcess] celery@mysql ready.
+[2019-01-19 06:10:48,974: INFO/MainProcess] Received task: tasks.user.execute_user_task[453e0068-40c0-4776-b978-7ab99a4f5cc9]  
+/root/.virtualenvs/weibo/lib/python3.6/site-packages/celery/platforms.py:796: RuntimeWarning: You're running the worker with superuser privileges: this is
+absolutely not recommended!
+
+Please specify a different user using the --uid option.
+
+User information: uid=0 euid=0 gid=0 egid=0
+
+  uid=uid, euid=euid, gid=gid, egid=egid,
+[2019-01-19 06:10:49,026: INFO/ForkPoolWorker-1] Task tasks.user.execute_user_task[453e0068-40c0-4776-b978-7ab99a4f5cc9] succeeded in 0.05089178999696742s: None
+[2019-01-19 06:10:49,694: INFO/MainProcess] Events of group {task} enabled by remote.
+[2019-01-19 06:12:22,824: INFO/MainProcess] sync with celery@a03
+
+worker: Warm shutdown (MainProcess)
+ 
+ -------------- celery@mysql v4.2.1 (windowlicker)
+---- **** ----- 
+--- * ***  * -- Linux-4.15.0-42-generic-x86_64-with-Ubuntu-18.04-bionic 2019-01-19 06:10:47
+-- * - **** --- 
+- ** ---------- [config]
+- ** ---------- .> app:         weibo_task:0x7f8432587eb8
+- ** ---------- .> transport:   redis://:**@redis.db:6379/5
+- ** ---------- .> results:     disabled://
+- *** --- * --- .> concurrency: 2 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> comment_crawler  exchange=comment_crawler(direct) key=comment_info
+                .> login_queue      exchange=login_queue(direct) key=for_login
+                .> search_crawler   exchange=search_crawler(direct) key=for_search_info
+                .> user_crawler     exchange=user_crawler(direct) key=for_user_info
+
+[tasks]
+  . tasks.comment.crawl_comment_by_page
+  . tasks.comment.crawl_comment_page
+  . tasks.comment.execute_comment_task
+  . tasks.dialogue.crawl_dialogue
+  . tasks.dialogue.crawl_dialogue_by_comment_id
+  . tasks.dialogue.crawl_dialogue_by_comment_page
+  . tasks.dialogue.execute_dialogue_task
+  . tasks.downloader.download_img_task
+  . tasks.home.crawl_ajax_page
+  . tasks.home.crawl_weibo_datas
+  . tasks.home.execute_home_task
+  . tasks.login.execute_login_task
+  . tasks.login.login_task
+  . tasks.praise.crawl_praise_by_page
+  . tasks.praise.crawl_praise_page
+  . tasks.praise.execute_praise_task
+  . tasks.repost.crawl_repost_by_page
+  . tasks.repost.crawl_repost_page
+  . tasks.repost.execute_repost_task
+  . tasks.search.execute_search_task
+  . tasks.search.search_keyword
+  . tasks.user.crawl_follower_fans
+  . tasks.user.crawl_person_infos
+  . tasks.user.crawl_person_infos_not_in_seed_ids
+  . tasks.user.execute_user_task
+
