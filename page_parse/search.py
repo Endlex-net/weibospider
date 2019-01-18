@@ -50,7 +50,7 @@ def get_feed_info(feed_infos, goal):
 
 @parse_decorator(None)
 def get_weibo_info(each, html):
-    print ("----------------------")
+    # print ("----------------------")
     wb_data = WeiboData()
     # print ("-------" * 10)
     # print(each)
@@ -66,18 +66,18 @@ def get_weibo_info(each, html):
     if not usercard:
         return None
     wb_data.uid = usercard.split('?')[0][12:]
-    print ("uid", wb_data.uid)
+    # print ("uid", wb_data.uid)
 
     try:
         wb_data.weibo_id = each.find(attrs={'title': '赞'}).get('action-data')[4:]
-        print ("weibo_id", wb_data.weibo_id)
+        # print ("weibo_id", wb_data.weibo_id)
     except (AttributeError, IndexError, TypeError):
         return None
 
     try:
         wb_data.weibo_url = each.find(attrs={"class": "content"}).find(attrs={"class": "from"}).find('a').get("href", "")[2:]
         # wb_data.weibo_url = each.find(attrs={'node-type': 'feed_list_item_date'})['href']
-        print ("weibo_url", wb_data.weibo_url)
+        # print ("weibo_url", wb_data.weibo_url)
     except Exception as e:
         parser.error('Failed to get weibo url, the error is {}, the source page is {}'.format(e, html))
         return None
@@ -113,7 +113,7 @@ def get_weibo_info(each, html):
         create_time = each.find(attrs={"class": "content"}).find(attrs={"class": "from"}).find('a').text.strip()
         create_time = datetime.datetime.strptime(create_time, "%Y年%m月%d日 %H:%M")
         wb_data.create_time = create_time.strftime("%Y-%m-%d %H:%M")
-        print ("create_time", wb_data.create_time)
+        # print ("create_time", wb_data.create_time)
     except Exception as e:
         traceback.print_exc()
         wb_data.create_time = ''
@@ -140,10 +140,10 @@ def get_weibo_info(each, html):
     try:
         try:
             wb_data.weibo_cont = each.find(attrs={"node-type": "feed_list_content_full"}).text.strip()
-            print ("full_weibo_cont", wb_data.weibo_cont)
+            # print ("full_weibo_cont", wb_data.weibo_cont)
         except:
             wb_data.weibo_cont = each.find(attrs={'class': 'txt'}).text.strip()
-            print ("weibo_cont", wb_data.weibo_cont)
+            # print ("weibo_cont", wb_data.weibo_cont)
     except Exception as why:
         parser.error('Failed to get weibo cont, the error is {}, the page source is {}'.format(why, html))
         return None
