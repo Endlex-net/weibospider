@@ -138,8 +138,12 @@ def get_weibo_info(each, html):
             wb_data.praise_num = 0
 
     try:
-        wb_data.weibo_cont = each.find(attrs={'class': 'txt'}).text.strip()
-        print ("weibo_cont", wb_data.weibo_cont)
+        try:
+            wb_data.weibo_cont = each.find(attrs={"node-type": "feed_list_content_full"}).text.strip()
+            print ("full_weibo_cont", wb_data.weibo_cont)
+        except:
+            wb_data.weibo_cont = each.find(attrs={'class': 'txt'}).text.strip()
+            print ("weibo_cont", wb_data.weibo_cont)
     except Exception as why:
         parser.error('Failed to get weibo cont, the error is {}, the page source is {}'.format(why, html))
         return None

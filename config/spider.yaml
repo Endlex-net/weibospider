@@ -44,7 +44,7 @@ share_host_count: 5
 cookie_expire_time: 23
 
 # 1 for allow download images, otherwise set it to 0
-images_allow: 1
+images_allow: 0
 
 # the default image path is '${user.home}/weibospider/images'
 # if you want to change another directory for download image, just set the path below
@@ -56,7 +56,7 @@ images_path: ''
 image_type: large
 
 db:
-    host: 127.0.0.1
+    host: "mysql.db"
     port: 3306
     user: root
     password: toorsmysql
@@ -64,7 +64,7 @@ db:
     db_type: mysql
 
 redis:
-    host: 127.0.0.1
+    host: "reids.db"
     port: 6379
     password: 'toorsredis'
     cookies: 1                   # store and fetch cookies
