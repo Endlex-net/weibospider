@@ -24,6 +24,7 @@ urls_db = REDIS_ARGS.get('urls', 2)
 broker_db = REDIS_ARGS.get('broker', 5)
 backend_db = REDIS_ARGS.get('backend', 6)
 id_name_db = REDIS_ARGS.get('id_name', 8)
+search_url_db = 12
 cookie_expire_time = get_cookie_expire_time()
 data_expire_time = REDIS_ARGS.get('expire_time') * 60 * 60
 
@@ -45,6 +46,7 @@ else:
     broker_con = redis.Redis(host=host, port=port, password=password, db=broker_db)
     urls_con = redis.Redis(host=host, port=port, password=password, db=urls_db)
     id_name_con = redis.Redis(host=host, port=port, password=password, db=id_name_db)
+    search_url_redis = redis.Redis(host=host, port=port, password=password, db=search_url_db)
 
 
 class Cookies(object):
@@ -191,3 +193,19 @@ class IdNames(object):
         if user_id:
             return user_id.decode('utf-8')
         return ''
+
+
+def get_searched_url_list():
+        urls = search_url_redis.get("searched_urls")
+        if not urls:
+            search_url_redis.set("searched_urls", json.dumps([]))
+            return []
+        return json.loads(urls)
+
+def set_searched_url(url):
+    urls = get_searched_url_list()
+    if url in urls:
+        return False
+    urls.append(url)
+    search_url_redis.set("searched_urls", json.dumps(urls))
+    return True

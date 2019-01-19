@@ -10,6 +10,7 @@ from config import get_max_search_page
 from page_parse import search as parse_search
 from db.dao import (
     KeywordsOper, KeywordsDataOper, WbDataOper)
+from db.redis_db import set_searched_url
 
 
 # This url is just for original weibos.
@@ -46,6 +47,9 @@ def search_keyword(keyword, keyword_id):
         encode_keyword = url_parse.quote(keyword)
         while cur_page < LIMIT:
             cur_url = MAX_URL.format(encode_keyword, cur_page, s_time)
+            if not set_searched_url(cur_url):
+                print ("url in search_list")
+                continue
             # current only for login, maybe later crawling page one without login
             search_page = get_page(cur_url, auth_level=2)
             if "您可以尝试更换关键词，再次搜索" in search_page:
