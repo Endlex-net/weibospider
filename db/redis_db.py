@@ -195,17 +195,17 @@ class IdNames(object):
         return ''
 
 
-def get_searched_url_list():
-        urls = search_url_redis.get("searched_urls")
+def get_searched_url_list(key):
+        urls = search_url_redis.get(key)
         if not urls:
-            search_url_redis.set("searched_urls", json.dumps([]))
+            search_url_redis.set(key, json.dumps([]))
             return []
         return json.loads(urls)
 
-def set_searched_url(url):
-    urls = get_searched_url_list()
+def set_searched_url(url, key="searched_urls"):
+    urls = get_searched_url_list(key)
     if url in urls:
         return False
     urls.append(url)
-    search_url_redis.set("searched_urls", json.dumps(urls))
+    search_url_redis.set(key, json.dumps(urls))
     return True
