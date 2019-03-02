@@ -209,3 +209,10 @@ def set_searched_url(url, key="searched_urls"):
     urls.append(url)
     search_url_redis.set(key, json.dumps(urls))
     return True
+
+def set_proxies(ip):
+    ip = search_url_redis.get("proxiex_ip")
+    if ip:
+        return ip
+    else:
+        search_url_redis.set("proxiex_ip", ip)

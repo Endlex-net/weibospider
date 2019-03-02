@@ -36,22 +36,28 @@ def getBetweenDay(begin_date):
     return date_list
 
 DATE_LIST = getBetweenDay(BEGIN_DATE)
-TIME_LIIT = list(range(0, 23))
-SEARCH_TIME_LIST = ["{}-{}:{}-{}".format(d, t, d, t+1) for d, t in itertools.product(DATE_LIST, TIME_LIIT)]
+TIME_LIIT = list(range(0, 23, 2))
+SEARCH_TIME_LIST = ["{}-{}:{}-{}".format(d, t, d, t+2) for d, t in itertools.product(DATE_LIST, TIME_LIIT)]
 
 @app.task(ignore_result=True)
 def search_keyword(keyword, keyword_id):
-    for s_time in SEARCH_TIME_LIST:
+    for date_item in DATE_LIST:
+        app.send_task('tasks.search.search_items_v2', args=(keyword, keyword_id, date_item), queue='search_crawler_item',
+                      routing_key='for_search_info')
+
+
+@app.task(ignore_result=True)
+def search_items_v2(keyword, keyword_id, date_item):
+    search_time_list = ["{}-{}:{}-{}".format(d, t, d, t+2) for d, t in itertools.product([date_item], TIME_LIIT)]
+
+    for s_time in search_time_list:
         crawler.info('We are searching keyword "{}", {}'.format(keyword, s_time))
         cur_page = 1
         encode_keyword = url_parse.quote(keyword)
         while cur_page < LIMIT:
             cur_url = MAX_URL.format(encode_keyword, cur_page, s_time)
-            if not set_searched_url(cur_url):
-                print ("url in search_list")
-                continue
             # current only for login, maybe later crawling page one without login
-            search_page = get_page(cur_url, auth_level=2)
+            search_page = get_page(cur_url, auth_level=1, need_proxy=True)
             if "您可以尝试更换关键词，再次搜索" in search_page:
                 break
             if not search_page:
@@ -73,7 +79,7 @@ def search_keyword(keyword, keyword_id):
             # Because the search results are sorted by time, if any result has been stored in mysql,
             # We don't need to crawl the same keyword in this turn
             for wb_data in search_list:
-                #print(wb_data)
+                # print(wb_data)
                 rs = WbDataOper.get_wb_by_mid(wb_data.weibo_id)
                 KeywordsDataOper.insert_keyword_wbid(keyword_id, wb_data.weibo_id)
                 # todo incremental crawling using time
@@ -85,6 +91,8 @@ def search_keyword(keyword, keyword_id):
                     # todo: only add seed ids and remove this task
                     app.send_task('tasks.user.crawl_person_infos', args=(wb_data.uid,), queue='user_crawler',
                                   routing_key='for_user_info')
+
+
 
 @app.task(ignore_result=True)
 def execute_search_task():

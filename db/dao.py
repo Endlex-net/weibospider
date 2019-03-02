@@ -99,8 +99,10 @@ class SeedidsOper:
         """
         seed = db_session.query(SeedIds).filter(SeedIds.uid == uid).first()
 
-        if seed and seed.is_crawled == 0:
-            seed.is_crawled = result
+        if seed:
+            if seed.is_crawled == 0:
+                seed.is_crawled = result
+                print("craw {}".format(result))
         else:
             seed = SeedIds(uid=uid, is_crawled=result)
             db_session.add(seed)

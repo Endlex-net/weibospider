@@ -37,7 +37,7 @@ def is_banned(url):
     return False
 
 
-@timeout(200)
+@timeout(100)
 @timeout_decorator
 def get_page(url, auth_level=2, is_ajax=False, need_proxy=False):
     """
@@ -47,6 +47,8 @@ def get_page(url, auth_level=2, is_ajax=False, need_proxy=False):
     :param need_proxy: whether the request need a http/https proxy
     :return: response text, when a exception is raised, return ''
     """
+    auth_level=1
+    need_proxy=True
     crawler.info('the crawling url is {url}'.format(url=url))
     count = 0
 

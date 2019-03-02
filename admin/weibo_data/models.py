@@ -55,3 +55,18 @@ class WeiboData(models.Model):
         app_label = 'weibo_data'
 
 
+class WeiboComment(models.Model):
+    comment_id = models.CharField('评论ID', max_length=50, unique=True, blank=False)
+    comment_cont = models.TextField('内容')
+    comment_screen_name = models.TextField('评论用户')
+    weibo_id = models.CharField('微博ID', max_length=200, blank=False)
+    user_id = models.CharField('用户ID', max_length=20, blank=False)
+    create_time = models.CharField('创建时间', max_length=200, blank=False) 
+
+    def __str__(self):
+        return self.comment_id
+    class Meta:
+        db_table = 'weibo_comment'
+        verbose_name = "评论内容"
+        verbose_name_plural = "评论内容"
+        app_label = "weibo_data"

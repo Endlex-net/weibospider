@@ -111,6 +111,13 @@ def get_weibo_info(each, html):
 
     try:
         create_time = each.find(attrs={"class": "content"}).find(attrs={"class": "from"}).find('a').text.strip()
+        if "年" not in create_time and "月" in create_time:
+            create_time = "2019年" + create_time
+        elif "今天" in create_time:
+            pass
+            create_time.replace("今天", datetime.datetime.now().strftime("%Y-%m-%d "))
+            print( "啦啦啦啦啦 今天")
+
         create_time = datetime.datetime.strptime(create_time, "%Y年%m月%d日 %H:%M")
         wb_data.create_time = create_time.strftime("%Y-%m-%d %H:%M")
         # print ("create_time", wb_data.create_time)

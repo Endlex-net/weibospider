@@ -15,7 +15,6 @@ BASE_URL = 'http://weibo.com/aj/v6/comment/big?ajwvr=6&id={}&page={}'
 def crawl_comment_by_page(mid, page_num):
     try:
         cur_url = BASE_URL.format(mid, page_num)
-        assert set_searched_url(cur_url, key="commit_url"), "commit_url in urls"
         html = get_page(cur_url, auth_level=1, is_ajax=True)
         comment_datas = comment.get_comment_list(html, mid)
     except SoftTimeLimitExceeded:
